@@ -28,7 +28,9 @@ This project was developed as part of a midterm assignment for the Advanced Data
 
 
 ## Screenshots
+## Screenshots
 
+![Student Checklist Screenshot](Checklist.png)
 
 
 
