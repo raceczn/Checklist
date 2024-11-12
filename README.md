@@ -6,6 +6,11 @@ A web designed for academic record management, the Personal Academic Checklist a
 This project was developed as part of a midterm assignment for the Advanced Database Management System course.
 
 
+## Screenshots
+
+![Student Checklist Screenshot](Checklist.png)
+
+
 ## Features
 
 - **Course Table**: Displays a list of information, with columns for course code, course name, lecture and laboratory units, year level, pre-requisite instructor, grade, and status.
@@ -25,10 +30,6 @@ This project was developed as part of a midterm assignment for the Advanced Data
 
 **Database:** MySQL
 
-
-## Screenshots
-
-![Student Checklist Screenshot](Checklist.png)
 
 
 
