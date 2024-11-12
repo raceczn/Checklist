@@ -1,7 +1,7 @@
 
 # Student Checklist
 
-A web application designed for academic record management, the Personal Academic Checklist allows students to view and track their academic progress with ease. Built with a focus on usability and efficiency, this application provides an organized view of personal information, courses, grades, instructors, and units, all stored securely in a MySQL database.
+A web designed for academic record management, the Personal Academic Checklist allows students to view and track their academic progress with ease. Built with a focus on usability and efficiency, this application provides an organized view of personal information, courses, grades, instructors, and units, all stored securely in a MySQL database.
 
 This project was developed as part of a midterm assignment for the Advanced Database Management System course.
 
