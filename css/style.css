@@ -98,7 +98,7 @@ img {
 
 .table__header .input-group:hover {
   width: 30%;
-  background-color: fffb;
+  background-color: red;
   box-shadow: 0 .1rem .4rem #0002;
 }
 
@@ -107,7 +107,7 @@ img {
   padding: 0 .5rem 0 .3rem;
   background-color: transparent;
   border: none;
-  outline: none;
+  outline: none;  
 
 
 
@@ -153,9 +153,13 @@ table,
 th,
 td {
   border-collapse: collapse;
-  padding: .2em;
+  padding: 0.6em; /* Increased padding for better spacing */
   font-size: 14px;
   text-align: center;
+}
+
+th, td {
+  padding: 10px 15px; /* Adjusted padding for better spacing */
 }
 
 tr th {
@@ -170,6 +174,7 @@ td:nth-child(11),
 th:nth-child(9),
 td:nth-child(9) {
   text-align: left;
+  padding-left: 15px; /* Added left padding for alignment */
 }
 
 th {

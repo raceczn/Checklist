@@ -81,6 +81,8 @@ if (isset($_GET['filter']) && $_GET['filter'] !== 'selectyr') {
 }
 
 
+
+
 // Query to get total number of records
 $count_query = "SELECT COUNT(*) AS total_records FROM Checklist cl
                 LEFT JOIN Student st ON cl.student_number = st.student_number"
@@ -147,6 +149,8 @@ mysqli_free_result($name_result);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
     <link rel='stylesheet' href="css/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 </head>
 
@@ -163,10 +167,10 @@ mysqli_free_result($name_result);
 
     }
 
+
     .select {
         /* margin-left: 2rem; */
     }
-
 </style>
 
 <body>
@@ -174,7 +178,7 @@ mysqli_free_result($name_result);
         <div class="table" id="student_table">
             <section class="table__header">
                 <div class="student_name">
-                <h3><span style="color: #006400;">Hello</span>, <?php echo htmlspecialchars($student_name); ?></h3>
+                    <h3><span style="color: #006400;">Hello</span>, <?php echo htmlspecialchars($student_name); ?></h3>
                 </div>
                 <!-- Filter dropdown -->
                 <div class="select">
@@ -191,15 +195,15 @@ mysqli_free_result($name_result);
                             <option value="fourthyear_firstsem" <?php echo isset($_GET['filter']) && $_GET['filter'] === 'fourthyear_firstsem' ? 'selected' : ''; ?>>Fourth Year - First Semester</option>
                             <option value="fourthyear_secondsem" <?php echo isset($_GET['filter']) && $_GET['filter'] === 'fourthyear_secondsem' ? 'selected' : ''; ?>>Fourth Year - Second Semester</option>
                         </select>
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Filter Year & Sem</button>
+                        <!-- <div class="btn-group">
                             <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 Export
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
                             </ul>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
 
@@ -253,7 +257,7 @@ mysqli_free_result($name_result);
                             }
 
                             // Output the table row 
-                            echo "<tr>";
+                            echo "<tr onclick='openModal({$row['checklist_id']}, \"{$row['grade']}\", \"{$row['instructor_id']}\", \"{$row['course_code']}\", \"{$row['course_title']}\")'>";
                             echo "<td>" . $row['course_code'] . "</td>";
                             echo "<td>" . $row['course_title'] . "</td>";
                             echo "<td>" . $row['credit_unit_lecture'] . "</td>";
@@ -334,8 +338,66 @@ mysqli_free_result($name_result);
                 </nav>
             </section>
         </div>
+
+
+        <!-- Bootstrap Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Grade & Instructor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm">
+                            <input type="hidden" id="checklist_id" name="checklist_id">
+
+                            <div class="mb-3">
+                                <label for="course_code" class="form-label">Course Code:</label>
+                                <input type="text" class="form-control" id="course_code" name="course_code" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="course_title" class="form-label">Course Title:</label>
+                                <input type="text" class="form-control" id="course_title" name="course_title" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="grade" class="form-label">Final Grade:</label>
+                                <input type="text" class="form-control" id="grade" name="grade">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="instructor" class="form-label">Instructor:</label>
+                                <select class="form-control" id="instructor" name="instructor">
+                                    <option value="">Select Instructor</option>
+                                    <?php
+                                    // Fetch instructors from the database
+                                    $instructorQuery = "SELECT instructor_id, instructor_first_name, instructor_last_name FROM Instructor";
+                                    $instructorResult = mysqli_query($conn, $instructorQuery);
+
+                                    while ($row = mysqli_fetch_assoc($instructorResult)) {
+                                        echo "<option value='" . $row['instructor_id'] . "'>" . $row['instructor_id'] . " - " . $row['instructor_first_name'] . " " . $row['instructor_last_name'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="js/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -345,71 +407,125 @@ mysqli_free_result($name_result);
 
     <script>
         $(document).ready(function() {
-            document.querySelectorAll('.pagination .page-link').forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const url = this.getAttribute('href');
-                    window.location.href = url;
-                });
+            // Pagination click event
+            $(document).on("click", ".pagination a", function(event) {
+                event.preventDefault();
+                var page = $(this).attr("href").split("page=")[1];
+                load_data(page);
             });
 
-            // Function to load data
+            // Function to load data with pagination
             function load_data(page) {
                 $.ajax({
-                    url: 'pagination.php',
-                    method: 'GET',
+                    url: "pagination.php",
+                    method: "GET",
                     data: {
                         page: page
                     },
                     success: function(data) {
-                        $('#student_data tbody').html(data);
-                    }
+                        $("#student_data tbody").html(data);
+                    },
                 });
             }
             load_data();
 
             // Search functionality
-            $('#search').keyup(function() {
+            $("#search").keyup(function() {
                 var query = $(this).val();
                 $.ajax({
-                    url: 'search.php',
-                    method: 'POST',
+                    url: "search.php",
+                    method: "POST",
                     data: {
                         query: query
                     },
                     success: function(data) {
-                        $('#student_data tbody').html(data);
+                        $("#student_data tbody").html(data);
+                    },
+                });
+            });
+
+            // Open modal and fill data
+            window.openModal = function(id, grade, instructor, courseCode, courseTitle) {
+                $("#checklist_id").val(id);
+                $("#grade").val(grade);
+                $("#instructor").val(instructor);
+                $("#course_code").val(courseCode);
+                $("#course_title").val(courseTitle);
+                $("#editModal").modal("show");
+            };
+
+
+            $("#editForm").submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var checklist_id = $("#checklist_id").val();
+                var grade = $("#grade").val().trim();
+                var instructor = $("#instructor").val().trim();
+
+                // Create an object to send data (even if it's empty)
+                var data = {
+                    checklist_id: checklist_id
+                };
+
+                data.grade = grade === "" ? "" : grade; // Send empty string if blank
+                data.instructor = instructor === "" ? "" : instructor; // Send empty string if blank
+
+                $.ajax({
+                    url: "update.php",
+                    method: "POST",
+                    data: data,
+                    success: function(response) {
+                        if (response.trim() == "success") {
+                            alert("Record updated successfully!");
+                            $("#editModal").modal("hide");
+                            location.reload(); // Reload table after update
+                        } else {
+                            alert("Error updating record: " + response);
+                        }
+                    },
+                    error: function() {
+                        alert("AJAX error: Could not update record.");
                     }
                 });
             });
 
-            // Pagination click event
-            $(document).on('click', '.pagination a', function(event) {
-                event.preventDefault();
-                var page = $(this).attr('href').split('page=')[1];
-                load_data(page);
-            });
 
-            // Function to export to Excel
-            $('#exportExcel').click(function() {
+
+            // Function to export table data to Excel
+            $("#exportExcel").click(function() {
                 var wb = XLSX.utils.book_new();
                 wb.Props = {
                     Title: "Student Checklist",
                     Author: "Your Name",
-                    CreatedDate: new Date()
+                    CreatedDate: new Date(),
                 };
 
                 wb.SheetNames.push("Student Data");
                 var ws_data = [
-                    ['Course Code', 'Course Title', 'Credit Unit Lecture', 'Credit Unit Laboratory', 'Contact Hours Lecture', 'Contact Hours Laboratory', 'Pre-requisite Course', 'Year Level', 'Semester', 'Final Grade', 'Instructor', 'Status']
+                    [
+                        "Course Code",
+                        "Course Title",
+                        "Credit Unit Lecture",
+                        "Credit Unit Laboratory",
+                        "Contact Hours Lecture",
+                        "Contact Hours Laboratory",
+                        "Pre-requisite Course",
+                        "Year Level",
+                        "Semester",
+                        "Final Grade",
+                        "Instructor",
+                        "Status",
+                    ],
                 ];
 
-                // Fetch data from the table
-                $('#student_data tbody tr').each(function(row, tr) {
+                // Fetch data from table
+                $("#student_data tbody tr").each(function(row, tr) {
                     var rowData = [];
-                    $(tr).find('td').each(function(col, td) {
-                        rowData.push($(td).text());
-                    });
+                    $(tr)
+                        .find("td")
+                        .each(function(col, td) {
+                            rowData.push($(td).text());
+                        });
                     ws_data.push(rowData);
                 });
 
@@ -417,21 +533,23 @@ mysqli_free_result($name_result);
                 wb.Sheets["Student Data"] = ws;
 
                 var wbout = XLSX.write(wb, {
-                    bookType: 'xlsx',
-                    type: 'binary'
+                    bookType: "xlsx",
+                    type: "binary"
                 });
 
                 function s2ab(s) {
                     var buf = new ArrayBuffer(s.length);
                     var view = new Uint8Array(buf);
-                    for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+                    for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
                     return buf;
                 }
-                saveAs(new Blob([s2ab(wbout)], {
-                    type: "application/octet-stream"
-                }), 'student_checklist.xlsx');
+                saveAs(
+                    new Blob([s2ab(wbout)], {
+                        type: "application/octet-stream"
+                    }),
+                    "student_checklist.xlsx"
+                );
             });
-
         });
     </script>
 
