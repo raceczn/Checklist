@@ -1,7 +1,7 @@
 <?php
 $db_server = "localhost";
 $db_user = "root";
-$db_pass = "Sunghoon24_sql"; // Replace 'your_password' with your actual MySQL root password
+$db_pass = "your_password"; // Replace 'your_password' with your actual MySQL root password
 $db_name = "checklist";
 
 // Establish connection
